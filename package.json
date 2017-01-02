@@ -30,6 +30,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "devDependencies": {
+    "bluebird": "^3.4.7",
     "js-yaml": "^3.7.0"
   },
   "dependencies": {
