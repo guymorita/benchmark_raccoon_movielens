@@ -11,7 +11,7 @@ const createYml = function(name) {
   const data = fs.readFileSync(path.join(__dirname, `/ml-100k/${name}`), { encoding : 'utf8'}).toString().split('\n').forEach(function(line){
     const cleanLine = line.replace(/\t/g, ' ');
     const arr = cleanLine.split(" ");
-    newContent.push(arr);
+    if (arr[0]) { newContent.push(arr); }
   });
   const yamlContent = yaml.safeDump(newContent);
   fs.writeFileSync(newFileURL, yamlContent, 'utf-8');

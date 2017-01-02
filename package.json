@@ -31,5 +31,8 @@
   "readmeFilename": "README.md",
   "devDependencies": {
     "js-yaml": "^3.7.0"
+  },
+  "dependencies": {
+    "raccoon": "^0.2.3"
   }
 }
