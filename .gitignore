@@ -1,0 +1,5 @@
+.DS_Store
+.npmignore
+node_modules
+dumb.rdb
+npm-debug.log
