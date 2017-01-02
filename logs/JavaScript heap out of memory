@@ -1,0 +1,32 @@
+<--- Last few GCs --->
+
+[51178:0x102804c00]    80050 ms: Mark-sweep 1423.8 (1506.7) -> 1423.8 (1506.7) MB, 1754.2 / 0.0 ms  allocation failure GC in old space requested
+[51178:0x102804c00]    81655 ms: Mark-sweep 1423.8 (1506.7) -> 1423.8 (1475.7) MB, 1604.7 / 0.0 ms  last resort gc
+[51178:0x102804c00]    83096 ms: Mark-sweep 1423.8 (1475.7) -> 1423.8 (1475.7) MB, 1441.3 / 0.0 ms  last resort gc
+
+
+<--- JS stacktrace --->
+
+==== JS stack trace =========================================
+
+Security context: 0x3d00128c0d39 <JS Object>
+    1: /* anonymous */ [/Users/guymorita/Projects/raccoon/lib/algorithms.js:22] [pc=0xd53eea0d48d](this=0x3740a1798be9 <JS Global Object>,err=0x3d0012804201 <null>,results1=0x14f8b9e2c351 <JS Array[2]>)
+    2: try_callback [/Users/guymorita/Projects/benchmark_raccoon_movielens/node_modules/redis/index.js:~577] [pc=0xd53ee944038](this=0x3740a1798be9 <JS Global Object>,callback=0x3b55c51173e9 <JS...
+
+FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory
+ 1: node::Abort() [/usr/local/bin/node]
+ 2: node::FatalException(v8::Isolate*, v8::Local<v8::Value>, v8::Local<v8::Message>) [/usr/local/bin/node]
+ 3: v8::internal::V8::FatalProcessOutOfMemory(char const*, bool) [/usr/local/bin/node]
+ 4: v8::internal::Factory::NewFixedArray(int, v8::internal::PretenureFlag) [/usr/local/bin/node]
+ 5: v8::internal::LCodeGenBase::PopulateDeoptimizationData(v8::internal::Handle<v8::internal::Code>) [/usr/local/bin/node]
+ 6: v8::internal::LChunk::Codegen() [/usr/local/bin/node]
+ 7: v8::internal::HCompilationJob::FinalizeJobImpl() [/usr/local/bin/node]
+ 8: v8::internal::Compiler::FinalizeCompilationJob(v8::internal::CompilationJob*) [/usr/local/bin/node]
+ 9: v8::internal::OptimizingCompileDispatcher::InstallOptimizedFunctions() [/usr/local/bin/node]
+10: v8::internal::StackGuard::HandleInterrupts() [/usr/local/bin/node]
+11: v8::internal::Runtime_StackGuard(int, v8::internal::Object**, v8::internal::Isolate*) [/usr/local/bin/node]
+12: 0xd53ee5063a7
+13: 0xd53eea0d48d
+14: 0xd53ee944038
+15: 0xd53ee96d394
+Abort trap: 6
