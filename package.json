@@ -31,7 +31,8 @@
   "readmeFilename": "README.md",
   "devDependencies": {
     "bluebird": "^3.4.7",
-    "js-yaml": "^3.7.0"
+    "js-yaml": "^3.7.0",
+    "performance-now": "^0.2.0"
   },
   "dependencies": {
     "raccoon": "^0.2.3"
