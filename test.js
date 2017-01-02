@@ -6,7 +6,7 @@ const fs = require('fs'),
   client = require('./lib/client'),
   now = require("performance-now");
 
-const NUM_USERS_TO_TEST = 300;
+const NUM_USERS_TO_TEST = 100;
 const EQUILIBRIUM = 0.0;
 
 let start, stop;
@@ -78,15 +78,24 @@ client.flushdbAsync().then(() => {
   let unratedCount = 0;
   let totalCount = 0;
   let highGuess = 0;
+  let sqErrorSum = 0;
+
   for (i in predictResults) {
     const [user, rating, prediction] = predictResults[i];
+    const polarPrediction = prediction > 0 ? 1 : -1;
+    const polarRating = rating > 3 ? 1 : -1;
+    const residualError = polarRating - polarPrediction;
+
     if (user > NUM_USERS_TO_TEST) {
       continue;
     }
+
+    const sqError = Math.pow(residualError, 2);
+    sqErrorSum += sqError;
     totalCount += 1;
+
     if (prediction === 0) {
       unratedCount += 1;
-      console.log('no prediction [rating, prediction]', [rating, prediction]);
     } else if (prediction > EQUILIBRIUM && rating > 3) {
       correctCount += 1;
       ratedCount += 1;
@@ -97,18 +106,21 @@ client.flushdbAsync().then(() => {
       if (prediction > EQUILIBRIUM) {
         highGuess += 1;
       }
-      console.log('wrong [rating, prediction]', [rating, prediction]);
       incorrectCount += 1;
       ratedCount += 1;
     }
   }
+  const RMSE = Math.sqrt(sqErrorSum / totalCount);
+
   const finalScore = (correctCount / ratedCount).toFixed(4);
   const unratedPerc = (unratedCount / totalCount).toFixed(4);
   const highGuessPerc = (highGuess / incorrectCount).toFixed(4);
-  console.log(`Only compared ${NUM_USERS_TO_TEST} users`);
+
+  console.log(`Compared ${NUM_USERS_TO_TEST} users`);
+  console.log(`RMSE = ${RMSE}`);
   console.log(`Final Score: ${finalScore}% -- ${correctCount} out of ${ratedCount} correct`);
   console.log(`Unrated: ${unratedPerc}% -- ${unratedCount} out of ${totalCount} total`);
-  console.log(`High Guess: ${highGuessPerc}% -- ${highGuess} high out of ${incorrectCount} wrong`);
+  console.log(`Guessed high: ${highGuessPerc}% -- ${highGuess} high out of ${incorrectCount} wrong`);
   console.log(`Total time: ${totalTime} -- ${start.toFixed(3)/1000} till ${end.toFixed(3)/1000}`);
   console.log('--- all done ---');
   process.exit();
