@@ -1,0 +1,78 @@
+Compared 10 users
+Final Score: 0.7346% -- 512 out of 697 correct
+Unrated: 0.0029% -- 2 out of 699 total
+High Guess: 0.6595% -- 122 high out of 185 wrong
+Total time: 73.093559 -- 0.320393 till 73.413951
+--- all done ---
+
+Compared 10 users - knn === 10
+Final Score: 0.7297% -- 413 out of 566 correct
+Unrated: 0.1903% -- 133 out of 699 total
+High Guess: 0.6797% -- 104 high out of 153 wrong
+Total time: 74.339508 -- 0.31838099999999997 till 74.65789
+--- all done ---
+
+Compared 10 users - knn === 20
+Final Score: 0.7297% -- 413 out of 566 correct
+Unrated: 0.1903% -- 133 out of 699 total
+High Guess: 0.6797% -- 104 high out of 153 wrong
+Total time: 76.909414 -- 0.31325 till 77.22266400000001
+--- all done ---
+
+Only compared 30 users
+Final Score: 0.72% -- 959 out of 1335 correct
+Unrated: 0.26% -- 460 out of 1795 total
+High Guess: 0.67% -- 252 high out of 376 wrong
+--- all done ---
+
+Compared 50 users
+Final Score: 0.7137% -- 1750 out of 2452 correct
+Unrated: 0.0024% -- 6 out of 2458 total
+High Guess: 0.6738% -- 473 high out of 702 wrong
+Total time: 91.938489 -- 0.304678 till 92.243167
+--- all done ---
+
+Compared 50 users
+RMSE = 1.0566761174446568
+Final Score: 0.7206% -- 939 out of 1303 correct
+Unrated: 0.0008% -- 1 out of 1304 total
+High Guess: 0.6401% -- 233 high out of 364 wrong
+Total time: 84.96658199999999 -- 0.30823 till 85.27481200000001
+--- all done ---
+
+Compared 100 users
+Final Score: 0.7099% -- 3590 out of 5057 correct
+Unrated: 0.0016% -- 8 out of 5065 total
+High Guess: 0.4240% -- 622 high out of 1467 wrong
+Total time: 129.549508 -- 0.32118 till 129.870687
+--- all done ---
+
+Compared 100 users
+Final Score: 0.7235% -- 1978 out of 2734 correct
+Unrated: 0.0011% -- 3 out of 2737 total
+High Guess: 0.6627% -- 501 high out of 756 wrong
+Total time: 141.022208 -- 0.33582100000000004 till 141.35802900000002
+--- all done ---
+
+Compared 200 users
+RMSE = 1.0510654888186757
+Final Score: 0.7235% -- 3551 out of 4908 correct
+Unrated: 0.0018% -- 9 out of 4917 total
+High Guess: 0.6448% -- 875 high out of 1357 wrong
+Total time: 314.013728 -- 0.324796 till 314.33852399999995
+--- all done ---
+
+Only compared 300 users
+Final Score: 0.7189% -- 7427 out of 10331 correct
+Unrated: 0.2822% -- 4061 out of 14392 total
+High Guess: 0.6439% -- 1870 high out of 2904 wrong
+Total time: 336.60887099999997 -- 0.333258 till 336.942129
+--- all done ---
+
+RMSE = function(m, o){
+  sqrt(mean((m - o)^2))
+}
+
+=SQRT(SUMSQ(C2:C11)/COUNTA(C2:C11))
+
+c is the differences
