@@ -4,9 +4,33 @@ const fs = require('fs'),
   yaml = require('js-yaml'),
   raccoon = require('raccoon'),
   client = require('./lib/client'),
+  config = require('./lib/config'),
   now = require("performance-now");
 
-const NUM_USERS_TO_TEST = 100;
+require('heapdump');
+
+const generateHeapDumpAndStats = function(){
+  //1. Force garbage collection every time this function is called
+  try {
+    global.gc();
+  } catch (e) {
+    console.log("You must run program with 'node --expose-gc index.js' or 'npm start'");
+    process.exit();
+  }
+
+  //2. Output Heap stats
+  var heapUsed = process.memoryUsage().heapUsed;
+  console.log("Program is using " + heapUsed + " bytes of Heap.")
+
+  //3. Get Heap dump
+  process.kill(process.pid, 'SIGUSR2');
+}
+
+// generateHeapDumpAndStats();
+
+// setInterval(generateHeapDumpAndStats, 2000); //Do garbage collection and heap dump every 2 seconds
+
+const NUM_USERS_TO_TEST = config.numUsersToTest;
 const EQUILIBRIUM = 0.0;
 
 let start, stop;
@@ -22,10 +46,9 @@ const getYamlDoc = function(name){
   }  
 }
 
-const baseData = getYamlDoc('u1.base.yaml');
-const testData = getYamlDoc('u1.test.yaml');
+const baseData = getYamlDoc(config.baseDataPool);
+const testData = getYamlDoc(config.testDataPool);
 const userIds = Array.from(Array(NUM_USERS_TO_TEST).keys()).map((x)=> { return x + 1;});
-const predictionScores = [];
 
 const createRating = function(line) {
   const [user, movie, rating] = line;
@@ -35,7 +58,6 @@ const createRating = function(line) {
 
 const updateRec = function(userId) {
   return raccoon.updateSequence(userId, 1, {updateWilson: false}).then(() => {
-    console.log('userupdating', userId);
     return Promise.resolve();
   });
 };
@@ -49,25 +71,22 @@ const predictCompare = function(line) {
 
 start = now()
 client.flushdbAsync().then(() => {
-  const ratingActions = baseData.map(createRating); // run the function over all items.
+  const ratingActions = baseData.map(createRating);
 
-  // we now have a promises array and we want to wait for it
-
-  const ratingResults = Promise.all(ratingActions); // pass array of promises
+  const ratingResults = Promise.all(ratingActions);
+  console.log('--- finished inputing ratings ---');
   return ratingResults;
 }).then((data) => {
   const updateActions = userIds.map(updateRec);
 
   const recResults = Promise.all(updateActions);
-
+  console.log('--- finished updating similarities ---');
   return recResults;
 }).then((recResults) => {
-
-// Promise.resolve().then(() => {
   const predictActions = testData.map(predictCompare);
 
   const predictResults = Promise.all(predictActions);
-
+  console.log('--- finished making predictions ---');
   return predictResults;
 }).then((predictResults) => {
   end = now()
@@ -82,8 +101,8 @@ client.flushdbAsync().then(() => {
 
   for (i in predictResults) {
     const [user, rating, prediction] = predictResults[i];
-    const polarPrediction = prediction > 0 ? 1 : -1;
-    const polarRating = rating > 3 ? 1 : -1;
+    const polarPrediction = prediction > 0 ? 1 : 0;
+    const polarRating = rating > 3 ? 1 : 0;
     const residualError = polarRating - polarPrediction;
 
     if (user > NUM_USERS_TO_TEST) {
@@ -118,10 +137,10 @@ client.flushdbAsync().then(() => {
 
   console.log(`Compared ${NUM_USERS_TO_TEST} users`);
   console.log(`RMSE = ${RMSE}`);
-  console.log(`Final Score: ${finalScore}% -- ${correctCount} out of ${ratedCount} correct`);
+  console.log(`Prediction Accuracy: ${finalScore}% -- ${correctCount} out of ${ratedCount} correct`);
   console.log(`Unrated: ${unratedPerc}% -- ${unratedCount} out of ${totalCount} total`);
   console.log(`Guessed high: ${highGuessPerc}% -- ${highGuess} high out of ${incorrectCount} wrong`);
-  console.log(`Total time: ${totalTime} -- ${start.toFixed(3)/1000} till ${end.toFixed(3)/1000}`);
-  console.log('--- all done ---');
+  console.log(`Total time: ${totalTime.toFixed(2)} seconds`);
+  console.log('--- test complete ---');
   process.exit();
 });

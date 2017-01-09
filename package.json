@@ -31,6 +31,7 @@
   "readmeFilename": "README.md",
   "devDependencies": {
     "bluebird": "^3.4.7",
+    "heapdump": "^0.3.7",
     "js-yaml": "^3.7.0",
     "performance-now": "^0.2.0"
   },
